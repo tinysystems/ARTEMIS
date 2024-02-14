@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.artemis.base.ui
+Bundle-ManifestVersion: 2
+Bundle-Name: org.artemis.base.ui
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.artemis.base.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.artemis.base,
+ org.artemis.base.ide,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.artemis.base.ui.contentassist,
+ org.artemis.base.ui.quickfix,
+ org.artemis.base.ui.internal
+Bundle-Activator: org.artemis.base.ui.internal.BaseActivator

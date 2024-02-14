@@ -1,0 +1,34 @@
+@startuml
+skinparam componentstyle uml2
+
+interface iA
+interface iB
+interface iC
+
+component C {
+    portin a
+    portin c
+    portout b
+    
+    component "p1 : CC" as p1 {
+        portin "a" as p1_a
+        portout "b" as p1_b
+        portin "x" as p1_x
+    }
+    
+    component "p2 : CCC" as p2 {
+        portout "x" as p2_x
+        portin "c" as p2_c
+    }
+    
+    a -u-> iA
+    c -u-> iC
+    b .d.> iB : uses
+    a -d- p1_a
+    c -d- p2_c
+    p1_b .d. b
+    
+    p2_x -(0- p1_x : iX
+}
+
+@enduml

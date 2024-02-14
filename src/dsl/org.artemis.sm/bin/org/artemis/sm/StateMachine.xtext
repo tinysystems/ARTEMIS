@@ -1,0 +1,191 @@
+grammar org.artemis.sm.StateMachine with org.artemis.base.Base
+
+generate stateMachine "http://www.artemis.org/sm/StateMachine"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+import "http://www.artemis.org/base/Base" as base
+
+Monitor:
+    machines += StateMachine+
+;
+
+StateMachine:
+    'machine' name = ID '{' 
+        ('variables' vars += TypedVariable+)?
+        states += State+   
+     '}'
+;
+
+State:
+    initial?= 'initial'? 'state' name = ID '{'
+        (transitions += Transition)*
+    '}'
+;
+
+Transition:
+    'on' event = Event ('guard:' guard = Expression)?
+        actions += Action*
+        (onFail = OnFailAction)?     
+     'next' 'state:' next = [State | ID]
+;
+
+Event:
+    StartTask | EndTask | AnyEvent
+;
+
+StartTask:
+    'startTask' '(' task = ID ',' timeVar = UntypedVariable ')'
+;
+
+EndTask:
+    'endTask' '(' task = ID ',' timeVar = UntypedVariable ')'
+;
+
+AnyEvent:
+    'anyEvent' '(' timeVar = UntypedVariable ')'
+;
+
+Variable:
+    TypedVariable | UntypedVariable
+;
+
+UntypedVariable:
+    name = ID
+;
+
+TypedVariable:
+    type = Type name = ID ('=' expr = Expression)?
+;
+
+Action:
+    AssignmentAction
+;
+
+AssignmentAction:
+    var = [Variable | ID] '=' expr = Expression
+;
+
+OnFailAction:
+    RestartPath | SkipPath | RestartTask | SkipTask       
+;
+
+RestartPath: {RestartPath}
+    'restartPath' ('Path:' path = INT)?
+;
+
+SkipPath: {SkipPath}
+    'skipPath' ('Path:' path = INT)?
+;
+
+RestartTask: {RestartTask}
+    'restartTask'
+;
+
+SkipTask: {SkipTask}
+    'skipTask'
+;
+
+Expression: ExpressionLevel1;
+
+ExpressionLevel1 returns Expression:        // Left associativity
+    ExpressionLevel2
+    ( ({ExpressionAnd.left=current}         ("AND" | "and") right=ExpressionLevel2)  
+    | ({ExpressionOr.left=current}          ("OR" | "or")   right=ExpressionLevel2) 
+    )*
+;
+
+ExpressionLevel2 returns Expression:        // Left associativity
+    ExpressionLevel3
+    ( ({ExpressionEqual.left=current}       "=="    right=ExpressionLevel3) 
+    | ({ExpressionNEqual.left=current}      "!="    right=ExpressionLevel3) 
+    )*
+;
+
+ExpressionLevel3 returns Expression:        // Left associativity
+    ExpressionLevel4
+    ( ({ExpressionGeq.left    =current}     ">="    right=ExpressionLevel4) 
+    | ({ExpressionGreater.left=current}     ">"     right=ExpressionLevel4) 
+    | ({ExpressionLeq.left    =current}     "<="    right=ExpressionLevel4) 
+    | ({ExpressionLess.left   =current}     "<"     right=ExpressionLevel4)
+    )*
+;
+
+ExpressionLevel4 returns Expression:        // Left associativity
+    ExpressionLevel5
+    ( ({ExpressionAddition.left   =current} "+"     right=ExpressionLevel5) 
+    | ({ExpressionSubtraction.left=current} "-"     right=ExpressionLevel5) 
+    )*
+;
+
+ExpressionLevel5 returns Expression:        // Left associativity
+    ExpressionLevel6
+    ( ({ExpressionMultiply.left=current}    "*"     right=ExpressionLevel6) 
+    | ({ExpressionDivision.left=current}    "/"     right=ExpressionLevel6)
+    | ({ExpressionMaximum.left =current}    "max"   right=ExpressionLevel6)
+    | ({ExpressionMinimum.left =current}    "min"   right=ExpressionLevel6)
+    )*
+;
+
+ExpressionLevel6 returns Expression:        // Right associativity
+    ExpressionLevel7
+    ( ({ExpressionPower.left=current}       "^"     right=ExpressionLevel6)
+    )?
+;
+
+ExpressionLevel7 returns Expression:
+    ExpressionNot | ExpressionMinus | ExpressionPlus | ExpressionLevel8
+;
+
+ExpressionNot: 
+    ("NOT" | "not") sub=ExpressionLevel8
+;
+
+ExpressionMinus: 
+    "-" sub=ExpressionLevel8
+;
+
+ExpressionPlus: 
+    "+" sub=ExpressionLevel8
+;
+
+
+ExpressionLevel8:
+    ExpressionBracket |
+    ExpressionConstantBool |
+    ExpressionConstantInt |
+    ExpressionConstantReal |
+    ExpressionConstantString |
+    ExpressionVariable
+;
+
+ExpressionBracket:
+    "(" sub=Expression ")"
+;
+
+ExpressionConstantBool:
+    value=BOOL_LITERAL
+;
+
+ExpressionConstantInt: 
+    value=INT
+;
+
+ExpressionConstantReal: 
+    value=FLOAT
+;
+
+ExpressionConstantString: 
+    value = STRING
+;
+
+ExpressionVariable: 
+    variable=[Variable | ID]
+;
+
+terminal BOOL_LITERAL returns ecore::EBoolean:
+    'true' | 'false' | 'TRUE' | 'FALSE' | 'True' | 'False'
+;
+
+terminal FLOAT returns ecore::EDouble:
+    INT '.' INT (('E' | 'e') ('-')? INT)?
+;

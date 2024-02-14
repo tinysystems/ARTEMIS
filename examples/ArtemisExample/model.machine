@@ -1,0 +1,159 @@
+machine micSense_0 {
+    variables
+    int maxTries = 10
+    int i
+    
+    initial state NotStarted {
+        on startTask(micSense, t)
+            i = 1
+        next state: Started
+    }
+    
+    state Started {
+        on startTask(micSense, t) guard: i < maxTries
+            i = i + 1
+        next state: Started
+                
+        on startTask(micSense, t) guard: i == maxTries
+            skipPath
+        next state: NotStarted
+                
+        on endTask(micSense, t)
+        next state: NotStarted
+    }
+}
+
+machine send_0 {
+    variables
+    real d = 300.0
+    int i = 1
+    real endaccel
+    
+    initial state WaitEndaccel {
+        on endTask(accel, t)
+            endaccel = t
+        next state: WaitStartsend
+    }
+    
+    state WaitStartsend {
+        on startTask(send, t) guard: t - endaccel <= d
+            i = 1
+        next state: WaitEndaccel
+        
+        on anyEvent(t) guard: t - endaccel > d and i < 3
+            i = i + 1
+            restartPath
+        next state: WaitEndaccel
+        
+        on anyEvent(t) guard: t - endaccel > d and i == 3
+            skipPath Path: 2
+        next state: WaitEndaccel
+    }
+}
+
+machine send_1 {
+    variables
+    real d = 100.0
+    real start
+    
+    initial state NotStarted {
+            on startTask(send, t)
+                start = t
+            next state: Started
+        }
+        
+        state Started {
+            on endTask(send, t) guard: t - start <= d
+            next state: NotStarted
+            
+            on anyEvent(t) guard: t - start > d
+                skipTask
+            next state: NotStarted
+        }
+}
+
+machine send_2 {
+    variables
+    int i = 0
+    
+    initial state Idle {
+        on startTask(send, t) guard: i == 1
+            i = 0
+        next state: Idle
+        
+        on startTask(send, t) guard: i != 1
+            i = 0
+            restartPath Path: 2
+        next state: Idle
+        
+        on endTask(accel, t)
+            i = i + 1
+        next state: Idle
+    }
+}
+
+machine send_3 {
+    variables
+    int i = 0
+    
+    initial state Idle {
+        on startTask(send, t) guard: i == 1
+            i = 0
+        next state: Idle
+        
+        on startTask(send, t) guard: i != 1
+            i = 0
+            restartPath Path: 3
+        next state: Idle
+        
+        on endTask(micSense, t)
+            i = i + 1
+        next state: Idle
+    }
+}
+
+machine calcAvg_0 {
+    variables
+    int i = 0
+    
+    initial state Idle {
+        on startTask(calcAvg, t) guard: i == 10
+            i = 0
+        next state: Idle
+        
+        on startTask(calcAvg, t) guard: i != 10
+            i = 0
+            restartPath
+        next state: Idle
+        
+        on endTask(bodyTemp, t)
+            i = i + 1
+        next state: Idle
+    }
+}
+
+machine accel_0 {
+    variables
+    int maxTries = 10
+    int i
+    
+    initial state NotStarted {
+        on startTask(accel, t)
+            i = 1
+        next state: Started
+    }
+    
+    state Started {
+        on startTask(accel, t) guard: i < maxTries
+            i = i + 1
+        next state: Started
+                
+        on startTask(accel, t) guard: i == maxTries
+            skipPath
+        next state: NotStarted
+                
+        on endTask(accel, t)
+        next state: NotStarted
+    }
+}
+

@@ -1,0 +1,75 @@
+grammar org.artemis.spec.Artemis with org.eclipse.xtext.common.Terminals
+
+generate artemis "http://www.artemis.org/spec/Artemis"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+ArtemisModel:
+    tasks += Task+
+    paths += Path+
+    taskProperties += TaskProperties +
+;
+
+Task:
+    'Task' name = ID
+;
+
+Path:
+    '(' 'Path:' id = INT (',' tasks += [Task | ID])+ ')'
+;
+
+TaskProperties:
+    task = [Task | ID] '{'
+        properties += Property+
+     '}'
+;
+
+Property:
+    Period | MaxTries | MaxDuration | Mitd | Collect
+;
+
+Period:
+    'period:' period = FLOAT 'ms' 'onFail:' onFailAction = OnFailAction 
+        'maxAttempt:' maxAttempts = INT 'onFail:' onFailMaxAttemptAction = OnFailAction ';' //TODO different time units 
+;
+
+MaxTries:
+    'maxTries:' nrTries = INT 'onFail:' onFailAction = OnFailAction ';'
+;
+
+MaxDuration:
+    'maxDuration:' maxDuration = FLOAT 'ms' 'onFail:' onFailAction = OnFailAction ';'
+;
+
+Mitd:
+    'MITD:' duration = FLOAT 'ms' 'dpTask:' dependsOn = [Task | ID] 'onFail:' onFailAction = OnFailAction
+        'maxAttempt:' maxAttempts = INT 'onFail:' onFailMaxAttemptAction = OnFailAction ';'
+;
+
+Collect:
+    'collect:' nrItems = INT 'dpTask:' dependsOn = [Task | ID] 'onFail:' onFailAction = OnFailAction ';'
+;
+
+OnFailAction:
+    RestartPath | SkipPath | RestartTask | SkipTask       
+;
+
+RestartPath: {RestartPath}
+    'restartPath' ('Path:' path = INT)?
+;
+
+SkipPath: {SkipPath}
+    'skipPath' ('Path:' path = INT)?
+;
+
+RestartTask: {RestartTask}
+    'restartTask'
+;
+
+SkipTask: {SkipTask}
+    'skipTask'
+;
+
+terminal FLOAT returns ecore::EDouble:
+    INT '.' INT (('E' | 'e') ('-')? INT)?
+;

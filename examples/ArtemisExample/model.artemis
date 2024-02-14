@@ -1,0 +1,30 @@
+Task bodyTemp
+Task calcAvg
+Task micSense
+Task filter
+Task accel
+Task classify 
+Task send
+
+(Path: 1, bodyTemp, calcAvg, send)
+(Path: 2, accel, classify, send)
+(Path: 3, micSense, filter, send)
+ 
+micSense {
+	maxTries: 10 onFail: skipPath;
+}
+
+send {
+	MITD: 300.0 ms dpTask: accel onFail: restartPath maxAttempt: 3 onFail: skipPath Path: 2;
+	maxDuration: 100.0 ms onFail: skipTask;
+	collect: 1 dpTask: accel onFail: restartPath Path: 2;
+	collect: 1 dpTask: micSense onFail: restartPath Path: 3;
+}
+
+calcAvg {
+	collect: 10 dpTask: bodyTemp onFail: restartPath;
+}
+
+accel {
+	maxTries: 10 onFail: skipPath; 
+}

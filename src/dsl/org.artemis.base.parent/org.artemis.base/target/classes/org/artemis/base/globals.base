@@ -1,0 +1,4 @@
+type int
+type string
+type real
+type bool

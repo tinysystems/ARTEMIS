@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.artemis.sm.ui
+Bundle-ManifestVersion: 2
+Bundle-Name: org.artemis.sm.ui
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.artemis.sm.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.artemis.sm,
+ org.artemis.sm.ide,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder,
+ org.artemis.base;bundle-version="1.0.0",
+ org.artemis.base.ui;bundle-version="1.0.0"
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.artemis.sm.ui.quickfix,
+ org.artemis.sm.ui.contentassist,
+ org.artemis.sm.ui.internal
+Bundle-Activator: org.artemis.sm.ui.internal.SmActivator
