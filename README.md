@@ -6,7 +6,7 @@ This repository contains the code associated with EuroSys'24 paper #134 "Adaptab
 
 # Repository Structure
 
-.
+```
 ├── examples
 │   └── ArtemisExample
 │       ├── model.artemis
@@ -126,8 +126,7 @@ This repository contains the code associated with EuroSys'24 paper #134 "Adaptab
             │   ├── build.properties
             │   └── target
             └── pom.xml
-
-
+```
 
 
 ## Runtime
