@@ -132,7 +132,7 @@ ARTEMIS consists of two main components ARTEMIS Code Generator (src folder) and 
             └── pom.xml
 ```
 
-## ARTEMIS Code Generator
+### ARTEMIS Code Generator
 
 
-## ARTEMIS Runtime/Monitor
+### ARTEMIS Runtime/Monitor
