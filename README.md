@@ -137,3 +137,5 @@ ARTEMIS consists of two main components ARTEMIS Code Generator ("src" folder) an
 
 ### ARTEMIS Runtime/Monitor
 The ARTEMIS runtime and monitor are located in the "runtime-monitor" folder as a static C library. This library includes hardware configuration for MSP430FR5994, as well as ARTEMIS source codes, such as memory configuration MACROS for non-volatile variables (mem.h), and a timekeeping simulator (clock.h). The ARTEMIS runtime's source code and headers can be found in the "libartemis" folder, while the ARTEMIS monitor's source code and headers are located in the "monitor" folder. Additionally, the Artemis C library includes a small version of Immortal Threads in the "ImmortalLib" folder, since the monitor code utilizes Immortal Threads to ensure monitoring against intermittent execution constraints.
+
+### ARTEMIS Example
