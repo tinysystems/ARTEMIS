@@ -5,7 +5,7 @@ This repository contains the code associated with EuroSys'24 paper #134 "Adaptab
 
 
 # Repository Structure
-ARTEMIS consists of two main components ARTEMIS Code Generation (src folder) and ARTEMIS runtime/monitor (runtime-monitor folder). The repository also contains the example holder which includes a Helath Monitoring App.  
+ARTEMIS consists of two main components ARTEMIS Code Generation (src folder) and ARTEMIS runtime/monitor (runtime-monitor folder). The repository also contains the example holder which includes a Heath Monitoring App.  
 
 ```
 ├── examples
