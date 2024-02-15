@@ -5,6 +5,7 @@ This repository contains the code associated with EuroSys'24 paper #134 "Adaptab
 
 
 # Repository Structure
+<p>ARTEMIS consists of two main components ARTEMIS Code Generation and ARTEMIS runtime/monitor.</p>
 
 ```
 ├── examples
