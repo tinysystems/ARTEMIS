@@ -72,3 +72,6 @@ The ARTEMIS runtime and monitor are located in the "runtime-monitor" folder as a
 
 ### ARTEMIS Example
 The example is located in folder "examples/ArtemisExample". It contains a model expressed in the ARTEMIS language and is an implementation of the example shown in [EuroSys'24 paper](https://2024.eurosys.org/).
+
+## Copyright
+MIT License. See the [license](https://github.com/tinysystems/easeIO/blob/main/LICENSE.txt)file for details.
